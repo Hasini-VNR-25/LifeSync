@@ -1,0 +1,19 @@
+{
+  "name": "lifesync",
+  "version": "1.0.0",
+  "description": "LIFESYNC — Adaptive Personal Life Intelligence System",
+  "main": "web_app/server.js",
+  "scripts": {
+    "start": "node web_app/server.js",
+    "test": "node scripts/run_algorithm_verification.js && node test/integration/api_integration_test.js"
+  },
+  "keywords": [
+    "lifesync",
+    "productivity",
+    "heuristics",
+    "planning-engine",
+    "life-twin"
+  ],
+  "author": "",
+  "license": "MIT"
+}

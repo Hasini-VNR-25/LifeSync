@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LIFESYNC — Adaptive Personal Life Intelligence System</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0D9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LIFESYNC">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        </div>
+        <div class="brand-text">
+          <h1>LIFESYNC</h1>
+          <span class="brand-subtitle">Adaptive Life Intelligence</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="resetDemoBtn" class="btn btn-secondary btn-sm" title="Reload Benchmark College Student Scenario (180m vs 200m)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          Reset Demo
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      <!-- 1. DASHBOARD VIEW -->
+      <section id="view-dashboard" class="tab-view active">
+        <div class="greeting-section">
+          <h2>Good day, <span id="userDisplayName">Alex</span></h2>
+          <p class="text-muted">Here is your live Life Twin intelligence overview.</p>
+        </div>
+
+        <!-- Comeback Mode Alert Banner -->
+        <div id="comebackBanner" class="alert-banner alert-rose" style="display: none;">
+          <div class="alert-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m13 2-2 10h8l-2 10 9-12h-8l2-8z"/></svg>
+          </div>
+          <div class="alert-body">
+            <h3>Life Disruption Detected</h3>
+            <p id="comebackBannerText">Your open tasks exceed available daily capacity. Let's recover gracefully without guilt.</p>
+            <button class="btn btn-rose btn-sm" onclick="switchTab('comeback')">Enter Comeback Mode</button>
+          </div>
+        </div>
+
+        <!-- Capacity Balance Card -->
+        <div class="card capacity-card">
+          <div class="card-header-flex">
+            <h3>Daily Capacity Balance</h3>
+            <span id="capacityBadge" class="badge badge-rose">+20m Overflow</span>
+          </div>
+          <div class="progress-bar-container">
+            <div id="capacityProgressBar" class="progress-bar progress-rose" style="width: 100%;"></div>
+          </div>
+          <div class="capacity-labels">
+            <span id="workloadLabel" class="caption">Workload: 200m (3.3h)</span>
+            <span id="availableLabel" class="caption">Available: 180m (3.0h)</span>
+          </div>
+          <div id="twinExplanationBox" class="explanation-box mt-3">
+            <p id="twinExplanationText" class="text-sm">Your open tasks require approximately 200 minutes, but your available planning time is 180 minutes. Your current plan has a 20-minute capacity gap.</p>
+          </div>
+        </div>
+
+        <!-- Quick Metrics -->
+        <div class="grid-2 mt-4">
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-title">COMPLETED TODAY</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div id="completedCountStat" class="stat-value">0 tasks</div>
+            <span class="caption text-muted">0m focused</span>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-title">UPCOMING URGENT</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="stat-value">2 tasks</div>
+            <span class="caption text-muted">DBMS & Java Due Today</span>
+          </div>
+        </div>
+
+        <!-- Quick Navigation Actions -->
+        <div class="grid-2 mt-4">
+          <button class="btn btn-secondary" onclick="switchTab('simulator')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+            What-If Simulator
+          </button>
+          <button class="btn btn-primary" onclick="switchTab('planner')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            Adaptive Daily Plan
+          </button>
+        </div>
+
+        <!-- Active Tasks List -->
+        <div class="section-title-flex mt-5">
+          <h3>Active Tasks (Section 17 Benchmark)</h3>
+          <button class="btn-text" onclick="showAddTaskModal()">+ Add Task</button>
+        </div>
+        <div id="tasksList" class="tasks-list mt-2"></div>
+      </section>
+
+      <!-- 2. ADAPTIVE PLANNER VIEW -->
+      <section id="view-planner" class="tab-view">
+        <div class="section-header">
+          <h2>Adaptive Daily Planner</h2>
+          <p class="text-muted">Deterministic heuristic planning engine with multi-objective J(P) evaluation.</p>
+        </div>
+
+        <div class="card mt-3">
+          <label class="form-label font-bold">Select Planning Strategy:</label>
+          <div class="radio-group mt-2">
+            <label class="radio-card">
+              <input type="radio" name="planStrategy" value="PriorityFirst" checked>
+              <div>
+                <strong>Priority-First</strong>
+                <p class="caption text-muted">Maximizes high-priority coursework and placement progression first.</p>
+              </div>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="planStrategy" value="DeadlineSensitive">
+              <div>
+                <strong>Deadline-Sensitive (EDF)</strong>
+                <p class="caption text-muted">Earliest-Deadline-First sequencing to protect immediate due dates.</p>
+              </div>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="planStrategy" value="RecoveryFirst">
+              <div>
+                <strong>Recovery-First</strong>
+                <p class="caption text-muted">Schedules quick wins (<= 30m) to build momentum while locking in deadlines.</p>
+              </div>
+            </label>
+          </div>
+          <button id="generatePlanBtn" class="btn btn-primary btn-block mt-4">Generate Adaptive Schedule</button>
+        </div>
+
+        <!-- Generated Plan Container -->
+        <div id="planResultContainer" style="display: none;" class="mt-4">
+          <!-- Score Breakdown Card -->
+          <div class="card score-card">
+            <div class="card-header-flex">
+              <div>
+                <h3>Plan Quality Score J(P)</h3>
+                <span class="caption text-muted">Normalized Heuristic Quality</span>
+              </div>
+              <div id="overallScoreBadge" class="score-pill">85/100</div>
+            </div>
+            <div class="score-breakdown mt-3">
+              <div class="score-row"><span>Deadline Satisfaction D(P) [35% wt]</span><strong id="scoreD">100</strong></div>
+              <div class="score-row"><span>Goal & Area Coverage G(P) [25% wt]</span><strong id="scoreG">100</strong></div>
+              <div class="score-row"><span>Time Slot Fit F(P) [25% wt]</span><strong id="scoreF">100</strong></div>
+              <div class="score-row"><span>Overload Penalty O(P) [-15% wt]</span><strong id="scoreO">0</strong></div>
+              <div class="score-row"><span>Commitment Conflict C(P) [-10% wt]</span><strong id="scoreC">0</strong></div>
+            </div>
+          </div>
+
+          <!-- Schedule Timeline -->
+          <h3 class="mt-4">Scheduled Timeline (180m Window)</h3>
+          <div id="scheduledTimeline" class="timeline-list mt-2"></div>
+
+          <!-- Unscheduled Tasks -->
+          <div id="unscheduledSection" class="mt-4" style="display: none;">
+            <h3 class="text-rose">Unscheduled Tasks (Hard Capacity Limit)</h3>
+            <div id="unscheduledList" class="unscheduled-list mt-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. WHAT-IF LIFE SIMULATOR VIEW -->
+      <section id="view-simulator" class="tab-view">
+        <div class="section-header">
+          <h2>What-If Life Simulator</h2>
+          <p class="text-muted">Simulate schedule alternatives side-by-side without mutating your active schedule.</p>
+        </div>
+
+        <div class="card mt-3">
+          <div class="card-header-flex">
+            <label class="form-label font-bold">Hypothetical Available Capacity:</label>
+            <span id="simTimeLabel" class="badge badge-teal">210 mins (3.5h)</span>
+          </div>
+          <input type="range" id="simTimeSlider" min="60" max="360" step="15" value="210" class="slider mt-2">
+
+          <div class="mt-4">
+            <label class="form-label font-bold">Include / Exclude Tasks in Scenario:</label>
+            <div id="simTaskCheckboxes" class="checkbox-list mt-2"></div>
+          </div>
+          <button id="runSimBtn" class="btn btn-teal btn-block mt-4">Simulate Alternative Scenario</button>
+        </div>
+
+        <!-- Side-by-Side Comparison Container -->
+        <div id="simComparisonContainer" class="mt-4" style="display: none;">
+          <h3>Side-by-Side Scenario Comparison</h3>
+          <div class="grid-2 mt-2">
+            <!-- Baseline Card -->
+            <div class="card comp-card baseline-card">
+              <span class="badge badge-secondary">BASELINE (Active)</span>
+              <div class="comp-score mt-2"><span id="baseScore">85</span> pts</div>
+              <div class="comp-stats mt-3">
+                <div class="comp-row"><span>Scheduled:</span><strong id="baseScheduled">180m</strong></div>
+                <div class="comp-row"><span>Unscheduled:</span><strong id="baseUnscheduled" class="text-rose">1 task (20m)</strong></div>
+                <div class="comp-row"><span>Buffer Left:</span><strong id="baseBuffer">0m</strong></div>
+              </div>
+            </div>
+
+            <!-- Scenario B Card -->
+            <div class="card comp-card scenario-card">
+              <span class="badge badge-teal">SCENARIO B</span>
+              <div class="comp-score text-teal mt-2"><span id="scenScore">84</span> pts</div>
+              <div class="comp-stats mt-3">
+                <div class="comp-row"><span>Scheduled:</span><strong id="scenScheduled">200m</strong></div>
+                <div class="comp-row"><span>Unscheduled:</span><strong id="scenUnscheduled" class="text-emerald">0 tasks</strong></div>
+                <div class="comp-row"><span>Buffer Left:</span><strong id="scenBuffer">10m</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="explanation-box card-dark mt-3">
+            <h4 class="text-mint">Mathematical Trade-Off Explanation</h4>
+            <p id="simExplanationText" class="text-sm mt-1">Scenario B schedules all 5 tasks (including Personal Reading) by expanding available time to 210 minutes. Deadlines and commitments remain protected with 10 minutes of buffer.</p>
+          </div>
+
+          <button id="applyScenarioBtn" class="btn btn-emerald btn-block mt-4">Apply Scenario B as Active Plan</button>
+        </div>
+      </section>
+
+      <!-- 4. COMEBACK RECOVERY VIEW -->
+      <section id="view-comeback" class="tab-view">
+        <div class="section-header">
+          <h2>Comeback Recovery Mode</h2>
+          <p class="text-muted">Supportive, nonjudgmental disruption recovery. Protects critical deadlines and rebuilds momentum.</p>
+        </div>
+
+        <div class="alert-banner alert-rose mt-3">
+          <div class="alert-body">
+            <h3>Supportive Momentum Reset</h3>
+            <p>Your original plan no longer fits the time available. Let's protect your nearest deadline and rebuild a manageable plan without cognitive overwhelm.</p>
+          </div>
+        </div>
+
+        <div id="comebackProposalsContainer" class="mt-4"></div>
+      </section>
+
+      <!-- 5. PERSONAL GROWTH INVESTIGATOR VIEW -->
+      <section id="view-insights" class="tab-view">
+        <div class="section-header">
+          <h2>Personal Growth Investigator</h2>
+          <p class="text-muted">Evidence-backed behavioral intelligence. Mines recorded planning logs and evaluates falsifiable trials.</p>
+        </div>
+
+        <!-- Active Trials -->
+        <h3 class="mt-4">Active Empirical Trials</h3>
+        <div id="experimentsList" class="mt-2"></div>
+
+        <!-- Detected Insights -->
+        <h3 class="mt-4">Empirical Patterns & Insights (N >= 5)</h3>
+        <div id="insightsList" class="mt-2"></div>
+      </section>
+
+      <!-- 6. PROFILE & SETTINGS VIEW -->
+      <section id="view-profile" class="tab-view">
+        <div class="section-header">
+          <h2>Profile & System Preferences</h2>
+          <p class="text-muted">Manage your planning capacity and data ownership.</p>
+        </div>
+
+        <div class="card mt-3">
+          <div class="user-profile-header">
+            <div class="avatar">A</div>
+            <div>
+              <h3 id="profileName">Alex Rivera</h3>
+              <p class="caption text-muted">CS Student • Asia/Kolkata</p>
+            </div>
+          </div>
+          <div class="divider my-3"></div>
+          <div class="form-group">
+            <label class="form-label font-bold">Daily Available Planning Minutes:</label>
+            <div class="flex-row gap-2 mt-2">
+              <input type="number" id="inputDailyMinutes" class="form-control" value="180">
+              <button id="saveCapacityBtn" class="btn btn-secondary">Update</button>
+            </div>
+            <p class="caption text-muted mt-1">Default focused capacity excluding sleep, meals, and lectures.</p>
+          </div>
+        </div>
+
+        <!-- Daily Reflection Card -->
+        <div class="card mt-4">
+          <h3>Log Daily Reflection</h3>
+          <p class="caption text-muted">Provides empirical calibration data for the Growth Investigator.</p>
+          <div class="mt-3">
+            <label class="form-label">What worked well today (Wins):</label>
+            <input type="text" id="refWins" class="form-control" placeholder="e.g. Mastered SQL query indexing.">
+          </div>
+          <div class="mt-2">
+            <label class="form-label">What caused friction:</label>
+            <input type="text" id="refChallenges" class="form-control" placeholder="e.g. Fatigue during long 60m blocks.">
+          </div>
+          <div class="mt-2">
+            <label class="form-label">One adjustment for tomorrow:</label>
+            <input type="text" id="refNextStep" class="form-control" placeholder="e.g. Cap study sessions to 30m.">
+          </div>
+          <button id="saveReflectionBtn" class="btn btn-teal btn-block mt-3">Save Daily Reflection</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="switchTab('dashboard')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('planner')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        <span>Plan</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('simulator')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/></svg>
+        <span>Simulate</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('comeback')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m13 2-2 10h8l-2 10 9-12h-8l2-8z"/></svg>
+        <span>Comeback</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('insights')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+        <span>Insights</span>
+      </button>
+      <button class="nav-item" onclick="switchTab('profile')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profile</span>
+      </button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
