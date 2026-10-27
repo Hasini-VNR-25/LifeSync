@@ -81,7 +81,7 @@ function generatePlan({ tasks, goals, commitments, availableMinutes, startTime, 
   const scheduledItems = [];
 
   const eligible = tasks.filter(t => {
-    if (t.status === 'Completed') return false;
+    if (t.status === 'Completed' || t.status === 'Deferred') return false;
     if (t.estimatedMinutes <= 0) {
       hardViolations.push(`Task "${t.title}" rejected: Duration must be strictly positive.`);
       return false;
@@ -370,10 +370,10 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (pathname === '/api/life-twin' && method === 'GET') {
-    const totalWorkload = db.tasks.filter(t => t.status !== 'Completed').reduce((sum, t) => sum + t.estimatedMinutes, 0);
+    const totalWorkload = db.tasks.filter(t => t.status === 'Pending').reduce((sum, t) => sum + t.estimatedMinutes, 0);
     const available = db.profile.dailyAvailableMinutes;
     const capacityGap = totalWorkload - available;
-    const overdue = db.tasks.filter(t => t.dueAt && t.dueAt < Date.now() && t.status !== 'Completed');
+    const overdue = db.tasks.filter(t => t.dueAt && t.dueAt < Date.now() && t.status === 'Pending');
 
     const summary = capacityGap > 0
       ? `Your open tasks require approximately ${totalWorkload} minutes, but your available planning time is ${available} minutes. Your current plan has a ${capacityGap}-minute capacity gap.`
@@ -487,8 +487,24 @@ const server = http.createServer(async (req, res) => {
 
   if (pathname === '/api/simulator/apply' && method === 'POST') {
     const body = await parseBody(req);
+    const simMinutes = parseInt(body.simulatedMinutes);
+    const excludedIds = new Set(body.excludedTaskIds || []);
+
+    if (simMinutes && !isNaN(simMinutes)) {
+      db.profile.dailyAvailableMinutes = simMinutes;
+    }
+
+    if (excludedIds.size > 0) {
+      db.tasks = db.tasks.map(t => {
+        if (excludedIds.has(t.id)) {
+          return { ...t, status: 'Deferred' };
+        }
+        return t;
+      });
+    }
+
     db.activePlan = body.plan;
-    return sendJson(res, 200, { success: true, activePlan: db.activePlan });
+    return sendJson(res, 200, { success: true, activePlan: db.activePlan, tasks: db.tasks });
   }
 
   if (pathname === '/api/comeback/generate' && method === 'POST') {

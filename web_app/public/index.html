@@ -97,9 +97,18 @@
         <!-- Today's Tasks Checklist -->
         <div class="section-heading mt-4">
           <h3>Today's Tasks</h3>
-          <button class="btn-link" onclick="showAddTaskModal()">+ Add task</button>
+          <button class="btn-link" onclick="openAddTaskModal()">+ Add task</button>
         </div>
         <div id="tasksList" class="tasks-container mt-2"></div>
+
+        <!-- Postponed / Deferred Tasks (e.g. from Simulator) -->
+        <div id="deferredTasksSection" class="mt-4" style="display: none;">
+          <div class="flex-between">
+            <span class="card-eyebrow">POSTPONED / DEFERRED FOR LATER</span>
+            <span id="deferredCountBadge" class="status-pill pill-slate">0 postponed</span>
+          </div>
+          <div id="deferredTasksList" class="tasks-container mt-2"></div>
+        </div>
       </section>
 
 
@@ -230,17 +239,45 @@
       <!-- ================= 5. PERSONAL GROWTH INSIGHTS ================= -->
       <section id="view-insights" class="tab-view">
         <div class="page-intro">
-          <h2>Insights & Experiments</h2>
-          <p class="text-subtle text-sm">Patterns discovered from what you actually finish.</p>
+          <h2>Habit Detective</h2>
+          <p class="text-subtle text-sm">Discovers why you fall behind and tests small habit tweaks that actually work.</p>
+        </div>
+
+        <!-- How this works card -->
+        <div class="card mt-3">
+          <span class="card-eyebrow">HOW THIS WORKS</span>
+          <div class="explainer-list mt-2">
+            <div class="explainer-step">
+              <span class="step-badge">1</span>
+              <div>
+                <strong class="text-xs">Tracks what you actually do</strong>
+                <p class="text-xs text-subtle">Every time you complete or postpone a task, LIFESYNC notes what worked.</p>
+              </div>
+            </div>
+            <div class="explainer-step mt-2">
+              <span class="step-badge">2</span>
+              <div>
+                <strong class="text-xs">Spots patterns without guessing</strong>
+                <p class="text-xs text-subtle">Requires at least 5 logged tasks (N &ge; 5) before detecting a real habit.</p>
+              </div>
+            </div>
+            <div class="explainer-step mt-2">
+              <span class="step-badge">3</span>
+              <div>
+                <strong class="text-xs">Runs Before vs. Now tests</strong>
+                <p class="text-xs text-subtle">Measures your completion rate before and after trying a new planning habit.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Active Habit Trial -->
-        <div class="mt-3">
-          <span class="card-eyebrow">ACTIVE EXPERIMENT</span>
+        <div class="mt-4">
+          <span class="card-eyebrow">ACTIVE HABIT TEST</span>
           <div id="experimentsList" class="mt-1"></div>
         </div>
 
-        <!-- Simple Insights -->
+        <!-- Discovered Patterns -->
         <div class="mt-4">
           <span class="card-eyebrow">DISCOVERED PATTERNS</span>
           <div id="insightsList" class="mt-1"></div>
@@ -318,6 +355,82 @@
         <span>Profile</span>
       </button>
     </nav>
+  </div>
+
+  <!-- Modal: Add Task with Explicit Priority Control -->
+  <div id="addTaskModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add New Task</h3>
+        <button class="modal-close-btn" onclick="closeAddTaskModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="input-label">TASK TITLE</label>
+        <input type="text" id="newTaskTitle" class="clean-input mt-1" placeholder="e.g., LeetCode 3 Problems">
+
+        <label class="input-label mt-3">DURATION</label>
+        <div class="quick-pill-selector mt-1">
+          <button type="button" class="quick-pill" onclick="selectDuration(15, this)">15m</button>
+          <button type="button" class="quick-pill active" onclick="selectDuration(30, this)">30m</button>
+          <button type="button" class="quick-pill" onclick="selectDuration(45, this)">45m</button>
+          <button type="button" class="quick-pill" onclick="selectDuration(60, this)">60m</button>
+        </div>
+        <div class="flex-row items-center gap-2 mt-2">
+          <input type="number" id="newTaskMins" class="clean-input" value="30" min="5" max="300" style="max-width: 100px;">
+          <span class="text-xs text-subtle">minutes</span>
+        </div>
+
+        <label class="input-label mt-3">PRIORITY LEVEL</label>
+        <div class="priority-options mt-1">
+          <label class="priority-option-card">
+            <input type="radio" name="newTaskPriority" value="4">
+            <div class="priority-option-content">
+              <div class="flex-between">
+                <span class="status-pill pill-rose">Urgent</span>
+                <span class="text-xs text-subtle">Priority 4</span>
+              </div>
+              <p class="text-xs text-subtle mt-1">Hard deadline today. The planning engine schedules this first and never drops it.</p>
+            </div>
+          </label>
+
+          <label class="priority-option-card selected">
+            <input type="radio" name="newTaskPriority" value="3" checked>
+            <div class="priority-option-content">
+              <div class="flex-between">
+                <span class="status-pill pill-amber">High</span>
+                <span class="text-xs text-subtle">Priority 3</span>
+              </div>
+              <p class="text-xs text-subtle mt-1">Important daily goal. Scheduled before normal tasks.</p>
+            </div>
+          </label>
+
+          <label class="priority-option-card">
+            <input type="radio" name="newTaskPriority" value="2">
+            <div class="priority-option-content">
+              <div class="flex-between">
+                <span class="status-pill pill-slate">Normal</span>
+                <span class="text-xs text-subtle">Priority 2</span>
+              </div>
+              <p class="text-xs text-subtle mt-1">Flexible task. Can safely be postponed if your day overflows with work.</p>
+            </div>
+          </label>
+        </div>
+
+        <label class="input-label mt-3">LIFE AREA</label>
+        <select id="newTaskArea" class="clean-input mt-1">
+          <option value="area_academics">Academics & Learning</option>
+          <option value="area_career">Career & Placement</option>
+          <option value="area_health">Fitness & Health</option>
+          <option value="area_personal">Personal Development</option>
+        </select>
+      </div>
+
+      <div class="modal-footer mt-4">
+        <button class="btn btn-secondary" onclick="closeAddTaskModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitNewTask()">Add Task</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
